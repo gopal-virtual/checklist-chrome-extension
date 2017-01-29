@@ -1,26 +1,73 @@
-window.onload = function(){
-  document.querySelector('#addItemBtn').addEventListener('click', addItem)
-  document.querySelector('#saveChecklist').addEventListener('click', saveChecklist)
-}
-function saveChecklist() {
-    var checklist = document.querySelector('#checklist').children;
-    var syncList = {};
-    for (var i = 0; i < checklist.length; i++) {
-      syncList[i] = {
-        "checked" : false,
-        "item" : checklist[i].children[1].textContent
+(function(){
+  'use strict';
+
+  var checklist = {};
+  checklist.addList = addList;
+  checklist.deleteList = deleteList;
+  checklist.init = init;
+  checklist.save = save;
+
+  window.onload = function(){
+    checklist.init(addItemListener);
+  }
+
+  function deleteList() {
+    var ul = this.parentNode.parentNode;
+    var li = this.parentNode;
+    ul.removeChild(li)
+    checklist.save()
+  }
+
+  function addItemListener() {
+    document.querySelectorAll('ul#checklist > li > input.checkbox').forEach(function(item){
+      item.addEventListener('click', function(){
+        checklist.save();
+      })
+    })
+
+    document.querySelectorAll('ul#checklist > li > a.delete').forEach(function(anchor){
+      anchor.addEventListener('click', checklist.deleteList)
+    })
+  }
+
+  function init(callback){
+
+    document.querySelector('button#addItemBtn').addEventListener('click', function(){
+      checklist.addList(false, document.querySelector('#newItem').value);
+      checklist.save();
+    })
+
+    chrome.storage.sync.get('checklist', function (data) {
+      console.log(data)
+      for (var list in data.checklist) {
+        if (data.checklist.hasOwnProperty(list)) {
+          checklist.addList(data.checklist[list].checked, data.checklist[list].item)
+        }
       }
-    }
-    console.log(syncList)
-    chrome.storage.sync.set({"checklist" : syncList}, function() {
+      callback();
+    });
+  }
+
+  function addList(checked, item){
+    checked = checked == null ? false : checked;
+    var node = document.createElement("li");
+    node.innerHTML = "<input type=\"checkbox\" class=\"checkbox\"><label>"+ item +"</label><a class=\"delete\">delete</a>";
+    node.children[0].checked = checked;
+    document.querySelector("ul#checklist").appendChild(node);
+  }
+
+  function save() {
+      var checklist = document.querySelector('#checklist').children;
+      var syncList = {};
+      for (var i = 0; i < checklist.length; i++) {
+        syncList[i] = {
+          "checked" : checklist[i].children[0].checked,
+          "item" : checklist[i].children[1].textContent
+        }
+      }
+      console.log(syncList)
+      chrome.storage.sync.set({"checklist" : syncList}, function() {
        console.log("checklist saved")
      });
-
-}
-
-function addItem(){
-  var item = document.querySelector('#newItem').value;
-  var node = document.createElement("li");
-  node.innerHTML = "<input type=\"checkbox\"><label>"+ item +"</label>";
-  document.getElementById("checklist").appendChild(node);     // Append <li> to <ul> with id="myList"
-}
+  }
+})();
