@@ -7,19 +7,11 @@
 <html>
   <head>
     <title>Getting Started Extension's Popup</title>
-    <style>
-      body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
-      }
-      #status {
-        /* avoid an excessively wide status text */
-        white-space: pre;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 400px;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" media="screen" title="no title" charset="utf-8">
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-messaging.js"></script>
     <!--
       - JavaScript and HTML must be in separate files: see our Content Security
       - Policy documentation[1] for details and explanation.
@@ -29,9 +21,28 @@
      <script type="text/javascript" src="checklist.js"></script>
   </head>
   <body>
+    <div>
+      <form>
+        <div class="form-group">
+          <label for="username">
+            Username
+          </label>
+          <input id="username" class="form-control" type="text" placeholder="username">
+        </div>
+        <div class="form-group">
+          <button class="btn btn-md btn-black btn-block" type="button" id="addUserBtn">Save user</button>
+        </div>
+      </form>
+    </div>
+    <hr>
     <ul id="checklist"></ul>
-    <input id="newItem" type="text" placeholder="Add things you want to do">
-    <button id="addItemBtn">Add Item</button>
-    <!-- <button id="saveChecklist">Save</button> -->
+    <form>
+      <div class="form-group">
+        <input class="form-control" id="newItem" type="text" placeholder="Add things you want to do">
+      </div>
+      <div class="form-group">
+        <button class="btn btn-md btn-black btn-block" type="submit" id="addItemBtn">Add Item</button>
+      </div>
+    </form>
   </body>
 </html>

@@ -1,0 +1,24 @@
+share api
+/add/user
+/get/user
+/add/checklist - authenticated
+/update/checklist - authenticated
+/share?source_id=id&target_id=id&checklist_id=id
+
+flow -
+find user by unique_id(email) -> share
+
+Models
+User
+- user_id
+- email_id
+
+Checklist
+- checklist_id
+- user_id
+- checklist
+
+Permission
+- owner_id
+- target_id
+- checklist_id

@@ -1,0 +1,49 @@
+ul#checklist{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ul#checklist > li.list-item {
+  padding: 5px;
+}
+form > .form-group {
+  padding : 5px;
+  margin-top : 2.5px;
+  margin-bottom : 2.5px;
+}
+form > .form-group > label{
+  display: block;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size : 14px;
+}
+a.icon{
+  cursor: pointer;
+}
+.icon {
+  display: block;
+  padding: 5px;
+}
+.icon-delete {
+  font-weight: bold;
+}
+.pull-right {
+  float: right;
+}
+
+button.btn{
+  border : 0;
+}
+button.btn.btn-md{
+  padding : 10px;
+}
+button.btn.btn-black{
+  color : white;
+  background-color: black;
+}
+button.btn.btn-block {
+  width: 100%;
+}
+input[type=text].form-control{
+  padding: 5px;
+}

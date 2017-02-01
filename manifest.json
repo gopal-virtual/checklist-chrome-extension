@@ -15,5 +15,6 @@
     "storage",
     "activeTab",
     "https://ajax.googleapis.com/"
-  ]
+  ],
+  "content_security_policy": "script-src 'self' https://www.gstatic.com; object-src 'self'"
 }
