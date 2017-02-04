@@ -91,14 +91,28 @@
         addList: addList,
         deleteList: deleteList,
         init: init,
-        save: save
+        save: save,
+        getCount : getCount
     };
 
     function deleteList() {
+        console.log(this)
         var ul = this.parentNode.parentNode;
         var li = this.parentNode;
         ul.removeChild(li)
         checklist.save()
+    }
+
+    function getCount() {
+        var list = document.querySelector('#checklist')
+        var total = list.children.length;
+        var checked = 0;
+        for (var i = total - 1; i >= 0; i--) {
+            list.children[i].children[1].checked && checked++;
+        }
+
+        return '('+checked+'/'+total+')'
+
     }
 
     function addItemListener() {
@@ -116,12 +130,17 @@
     function init(callback) {
 
         document.querySelector('button#addItemBtn').addEventListener('click', function() {
-            checklist.addList(false, document.querySelector('#newItem').value);
+            checklist.addList(
+                false,
+                document.querySelector('#newItem').value,
+                function(ele){
+                    ele.addEventListener('click', checklist.deleteList)
+                });
             checklist.save();
         })
-        document.querySelector('button#addUserBtn').addEventListener('click', function() {
-            rest.addUser();
-        })
+        // document.querySelector('button#addUserBtn').addEventListener('click', function() {
+        //     rest.addUser();
+        // })
 
         chrome.storage.sync.get('checklist', function(data) {
             console.log(data)
@@ -130,16 +149,19 @@
                     checklist.addList(data.checklist[list].checked, data.checklist[list].item)
                 }
             }
+            checklist.getCount()
             callback();
         });
     }
 
-    function addList(checked, item) {
+    function addList(checked, item, callback) {
+        console.log('item %s', item)
         checked = checked == null ? false : checked;
         var node = document.createElement("li");
         node.setAttribute('class', 'list-item');
-        node.innerHTML = "<a class=\"icon icon-delete pull-right\">x</a><input type=\"checkbox\" class=\"checkbox\"><label>" + item + "</label>";
-        node.children[0].checked = checked;
+        node.innerHTML = "<a class=\"icon icon-delete delete pull-right\">x</a><input type=\"checkbox\" class=\"checkbox\"><label class=\"truncate\" >" + item + "</label>";
+        node.children[1].checked = checked;
+        callback && callback(node.children[0])
         document.querySelector("ul#checklist").appendChild(node);
     }
 
@@ -148,8 +170,8 @@
         var syncList = {};
         for (var i = 0; i < checklist.length; i++) {
             syncList[i] = {
-                "checked": checklist[i].children[0].checked,
-                "item": checklist[i].children[1].textContent
+                "checked": checklist[i].children[1].checked,
+                "item": checklist[i].children[2].textContent
             }
         }
         console.log(syncList)

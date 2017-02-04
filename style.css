@@ -47,3 +47,9 @@ button.btn.btn-block {
 input[type=text].form-control{
   padding: 5px;
 }
+.truncate {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
